@@ -1,0 +1,107 @@
+﻿<style>
+    .entry {
+        margin-bottom: 20px; /* Add spacing between entries */
+    }
+
+    .entry-media {
+        overflow: hidden; /* Prevents image overflow */
+        margin-bottom: 10px; /* Adds space between the image and text */
+    }
+
+        .entry-media img {
+            width: 100%; /* Makes sure the image is responsive */
+            height: auto; /* Maintains aspect ratio of the image */
+            object-fit: cover; /* Ensures the image covers the div without stretching */
+            display: block; /* Ensures the image is treated as a block-level element */
+        }
+
+    .entry-body {
+        padding: 10px; /* Adds some space inside the text container */
+    }
+
+    .entry-title a {
+        font-size: 18px; /* Adjusts the size of the title */
+        color: #333; /* Text color */
+        text-decoration: none; /* Removes underline */
+        line-height: 1.4; /* Prevents tight line spacing */
+    }
+
+        .entry-title a:hover {
+            color: #007bff; /* Adds hover effect */
+        }
+
+</style>
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tin tức - Hoạt động</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="featured-section mb-2 mt-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="title-group">
+                    <h1 class="subtitle">Tin tức - Hoạt động</h1>
+                </div>
+                <div class="blog-slider">
+                    <div class="row">
+                        @foreach (var tinTuc in Model)
+                        {
+                            <div class="col-lg-4 col-md-6 mb-2">
+                                <div class="item">
+                                    <article class="entry">
+                                        <div class="entry-media">
+                                            <a href="/Home/TinTucDetail/@tinTuc.Id">
+                                                <img src="~/images/@tinTuc.img" alt="@tinTuc.Title" />
+                                            </a>
+                                        </div>
+                                        <div class="entry-body">
+                                            <h3 class="entry-title">
+                                                <a href="/Home/TinTucDetail/@tinTuc.Id">@tinTuc.Title</a>
+                                            </h3>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <aside class="sidebar-shop col-lg-3">
+                <div class="sidebar-wrapper">
+                    <div class="widget mt-2">
+                        <h4 class="widget-title">
+                            <a data-toggle="collapse" href="#widget-body-5" role="button" aria-expanded="true" aria-controls="widget-body-5">Chuyên mục</a>
+                        </h4>
+                        <div class="collapse show" id="widget-body-5">
+                            <div class="widget-body pl-1">
+                                <ul class="cat-list">
+                                    <li><a href="/gioi-thieu">Giới thiệu</a></li>
+                                    <li><a href="/tin-tuc-hoat-dong">Tin tức - Hoạt động</a></li>
+                                    <li><a href="/su-kien">Chuyên mục chuyển đổi số</a></li>
+                                </ul>
+                            </div><!-- End .widget-body -->
+                        </div><!-- End .collapse -->
+
+                    </div>
+                    <div class="widget mt-2">
+                        <h4 class="widget-title">
+                            <a data-toggle="collapse" href="#widget-body-6" role="button" aria-expanded="true" aria-controls="widget-body-6">BÀI VIẾT NỔI BẬT</a>
+                        </h4>
+                        <div class="collapse show" id="widget-body-6">
+                            <div class="widget-body pl-0">
+                                <ul class="simple-entry-list">
+                                </ul>
+                            </div><!-- End .widget-body -->
+                        </div><!-- End .collapse -->
+
+                    </div>
+                </div><!-- End .sidebar-wrapper -->
+            </aside><!-- End .col-lg-3 -->
+        </div>
+    </div>
+</div>

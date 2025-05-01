@@ -1,0 +1,349 @@
+﻿@model List<LietSi>
+
+ 
+<div class="section_tracuu">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="text-center">
+                    <h6 class="tt-title">Tra cứu thông tin liệt sĩ</h6>
+                </div>
+                <a href="/Home/ExportExcel" class="btn btn-success btn-lg">Xuất Excel</a>
+
+                <form id="get_list_ds_lsy" class="form-default" asp-action="Search" method="post">
+                    <div class="row mb-3">
+                        <div class="col-lg-4 col-md-4 pb-4 pb-lg-0">
+                            <label for="name">Tên liệt sĩ (Trường thông tin bắt buộc)</label>
+                            <input type="text" name="HoTen" class="form-control" placeholder="" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label for="nam_sinh">Năm sinh</label>
+                            <select class="form-control" name="NamSinh">
+                                <option value="">Năm sinh</option>
+                                @for (var year = 1900; year <= DateTime.Now.Year; year++)
+                                {
+                                    <option value="@year">@year</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label for="nam_hi_sinh">Năm hy sinh</label>
+                            <select class="form-control" name="NamHySinh">
+                                <option value="">Năm hy sinh</option>
+                                @for (var year = 1900; year <= DateTime.Now.Year; year++)
+                                {
+                                    <option value="@year">@year</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="province">Nguyên Quán</label>
+                            <input type="text" name="QueQuanTinhThanh" class="form-control" placeholder="Tỉnh Thành" />
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-6">
+                            <label for="don_vi">Đơn vị</label>
+                            <input type="text" name="DonVi" class="form-control" placeholder="" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="province">Tỉnh/Thành</label>
+                            <select class="form-control" id="province" name="TinhThanh">
+                                <option value="">Chọn Tỉnh thành</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="district">Quận/Huyện</label>
+                            <select class="form-control" id="district" name="QuanHuyen" disabled>
+                                <option value="">Chọn Quận Huyện</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ward">Xã/Phường</label>
+                            <select class="form-control" id="ward" name="XaPhuong" disabled>
+                                <option value="">Chọn Xã Phường</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" id="provinceName" name="TinhThanh" />
+                        <input type="hidden" id="districtName" name="QuanHuyen" />
+                        <input type="hidden" id="wardName" name="XaPhuong" />
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="IDNghiaTrang">Nghĩa Trang</label>
+                            <select class="form-control" name="IDNghiaTrang">
+                                <option value="">Chọn Nghĩa Trang</option>
+                                @foreach (var item in ViewBag.NghiaTrangs as SelectList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="LoMo">Lô mộ</label>
+                            <input type="text" name="LoMo" class="form-control" placeholder="" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="KhuMo">Khu mộ</label>
+                            <input type="text" name="KhuMo" class="form-control" placeholder="" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-lg-4 col-md-4 col-4">
+                            <label for="so_mo">Số mộ</label>
+                            <input type="text" name="so_mo" class="form-control" placeholder="" />
+                        </div>
+                    </div>
+
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Tra cứu</button>
+                    </div>
+                </form>
+
+
+                <!-- Display search results -->
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive mt-5">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Họ tên</th>
+                                    <th>Năm sinh</th>
+                                    <th>Năm hy sinh</th>
+                                    <th>Nguyên quán</th>
+                                    <th>Nghĩa trang</th>
+                                    <th>Tỉnh thành</th>
+                                    <th>Quận huyện</th>
+                                    <th>Phường xã</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.HoTen</td>
+                                        <td>@item.NamSinh</td>
+                                        <td>@item.NamHySinh</td>
+                                        <td>@item.QueQuanTinhThanh</td>
+                                        <td>@item.NghiaTrang.TenNghiaTrang</td>
+                                        <td>@item.QueQuanTinhThanh</td>
+                                        <td>@item.QueQuanQuanHuyen</td>
+                                        <td>@item.QueQuanXaPhuong</td>
+                                        <td>
+                                            <button type="button" class="btn btn-info show-map" data-iframe="@item.Map">
+                                                Hiển thị bản đồ
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <div id="map-container" class="mt-4" style="display:none;">
+                            <div id="map-iframe-container"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<section class="intro-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="image">
+                    <img src="//banqlntlstp.cantho.gov.vn/files/images/about/gioi-thieu1.png" alt="Nghĩa trang Liệt sĩ thành phố " />
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="title-group">
+                    <span class="tags">Giới thiệu</span>
+                    <div class="subtitle">Nghĩa trang Liệt sĩ thành phố </div>
+                </div>
+                <div class="description">
+                    <div>Ban Quản lý Nghĩa trang liệt sĩ thành phố  (sau đây ghi tắt là Ban) là đơn vị sự nghiệp công lập trực thuộc Sở Lao động - Thương binh và Xã hội có chức năng: Tiếp nhận, tổ chức an táng hài cốt liệt sĩ do các đơn vị tìm kiếm, quy tập trong và ngoài nước bàn giao; tiếp nhận, cải táng hài cốt liệt sĩ do thân nhân liệt sĩ di chuyển từ các nghĩa trang liệt sĩ trong nước về an táng theo nguyện vọng của gia đình; lập danh sách, sơ đồ mộ liệt sĩ và nội dung ghi bia liệt sĩ; quản lý, chăm sóc nghĩa trang liệt sĩ, mộ liệt sĩ và công trình ghi công liệt sĩ theo hướng dẫn của Bộ Lao động - Thương binh và Xã hội.</div>
+
+                    <div>&nbsp;</div>
+
+                    <div>Ban có tư cách pháp nhân, có con dấu, có tài khoản, có trụ sở riêng và chịu sự chỉ đạo, quản lý về tổ chức, biên chế và hoạt động của Sở Lao động - Thương binh và Xã hội thành phố .</div>
+
+                </div>
+                <a class="btn btn-primary" href="/nghia-trang-liet-si-thanh-pho-can-tho">Xem thêm</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function () {
+        // Dynamic loading of provinces, districts, and wards
+        const host = "https://online-gateway.ghn.vn/shiip/public-api/master-data/";
+        const token = '5f440054-8c34-11ee-af43-6ead57e9219a';
+
+        // Function to call API
+        let callAPI = (api, params = {}) => {
+            const config = {
+                headers: { 'token': token },
+                params: params
+            };
+            return axios.get(host + api, config)
+                .then((response) => {
+                    return response.data;
+                })
+                .catch((error) => {
+                    console.error("Error calling API:", error);
+                });
+        };
+
+        // Render provinces
+        let renderDataProvince = () => {
+            callAPI("province")
+                .then((data) => {
+                    let row = '<option value="0">Chọn tỉnh/thành</option>';
+                    data.data.forEach(element => {
+                        row += `<option value="${element.ProvinceID}">${element.ProvinceName}</option>`;
+                    });
+                    $("#province").html(row);
+                })
+                .catch((error) => {
+                    console.error("Error rendering province data:", error);
+                });
+        };
+
+        // Render districts based on selected province
+        let renderDataDistrict = (array) => {
+            let row = '<option value="0">Chọn quận/huyện</option>';
+            array.data.forEach(element => {
+                row += `<option value="${element.DistrictID}">${element.DistrictName}</option>`;
+            });
+            $("#district").html(row);
+        };
+
+        // Render wards based on selected district
+        let renderDataWard = (array) => {
+            let row = '<option value="0">Chọn xã/phường</option>';
+            array.data.forEach(element => {
+                row += `<option value="${element.WardCode}">${element.WardName}</option>`;
+            });
+            $("#ward").html(row);
+        };
+
+        renderDataProvince();
+
+        // Event listeners to update district and ward based on selected province
+        $("#province").change(() => {
+            const provinceId = $("#province").val();
+            const provinceName = $("#province option:selected").text();
+            if (provinceId) {
+                $("#provinceName").val(provinceName);  // Set province name to hidden input
+                callAPI("district", { 'province_id': provinceId })
+                    .then((data) => renderDataDistrict(data));
+                $("#district").prop('disabled', false); // Enable district dropdown
+                $("#ward").prop('disabled', true); // Disable ward dropdown
+                $("#ward").html('<option value="">Chọn xã/phường</option>'); // Clear ward options
+            } else {
+                $("#district").prop('disabled', true); // Disable district dropdown if no province is selected
+                $("#ward").prop('disabled', true); // Disable ward dropdown
+                $("#district").html('<option value="">Chọn quận/huyện</option>');
+                $("#ward").html('<option value="">Chọn xã/phường</option>');
+            }
+        });
+
+        // Event listener for district change to load wards
+        $("#district").change(() => {
+            const districtId = $("#district").val();
+            const districtName = $("#district option:selected").text();
+            if (districtId) {
+                $("#districtName").val(districtName);  // Set district name to hidden input
+                callAPI("ward", { 'district_id': districtId })
+                    .then((data) => renderDataWard(data));
+                $("#ward").prop('disabled', false); // Enable ward dropdown
+            } else {
+                $("#ward").prop('disabled', true); // Disable ward dropdown if no district is selected
+                $("#ward").html('<option value="">Chọn xã/phường</option>');
+            }
+        });
+
+        // Event listener for ward change
+        $("#ward").change(() => {
+            const wardId = $("#ward").val();
+            const wardName = $("#ward option:selected").text();
+            if (wardId) {
+                $("#wardName").val(wardName);  // Set ward name to hidden input
+            }
+        });
+
+        $(".show-map").click(function () {
+            var iframeCode = $(this).data("iframe");
+
+            if (iframeCode) {
+                $("#map-iframe-container").html(iframeCode);
+
+                $("#map-container").show();
+            } else {
+                alert("Không có bản đồ cho địa điểm này!");
+            }
+        });
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Function to detect the browser name
+    function getBrowserName() {
+        var userAgent = navigator.userAgent;
+        if (userAgent.indexOf("Chrome") > -1) {
+            return "Chrome";
+        } else if (userAgent.indexOf("Firefox") > -1) {
+            return "Firefox";
+        } else if (userAgent.indexOf("Edge") > -1) {
+            return "Edge";
+        } else if (userAgent.indexOf("Safari") > -1) {
+            return "Safari";
+        } else {
+            return "Other";
+        }
+    }
+
+    // Triggered when the document is ready
+    $(document).ready(function () {
+        var browserName = getBrowserName(); // Get the browser name
+
+        // Send the browser name to the server
+        $.ajax({
+            url: '/Admin/TrackBrowserVisit', // The URL where the data will be sent
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ browserName: browserName }),
+            success: function (response) {
+                console.log("Browser visit tracked successfully");
+            },
+            error: function (xhr, status, error) {
+                console.error("Error tracking browser visit: " + error);
+            }
+        });
+    });
+</script>
+
